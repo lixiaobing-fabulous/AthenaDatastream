@@ -25,8 +25,8 @@ public class Client {
 
     @SneakyThrows
     public void write(Object object) {
-        OutputStream outputStream = socket.getOutputStream();
-        IOUtil.writeBytesToOutputStream(outputStream, javaSerializer.serialize(object));
-        outputStream.close();
+        try (OutputStream outputStream = socket.getOutputStream()) {
+            IOUtil.writeBytesToOutputStream(outputStream, javaSerializer.serialize(object));
+        }
     }
 }

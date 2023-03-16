@@ -16,6 +16,7 @@ import com.athena.runtime.stream.paritioner.StreamPartitioner;
 import com.athena.runtime.stream.streamrecord.StreamRecord;
 import com.athena.runtime.stream.task.DefaultInput;
 import com.athena.runtime.stream.task.DefaultOutput;
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.io.Serializable;
@@ -29,12 +30,14 @@ import java.util.Map;
  * @Date 2023/3/11
  * @Version 1.0
  **/
+@Getter
 public class Task implements Runnable, Serializable {
     private String invokableClassName = "";
     private ExecutionEnvironment environment;
     private StreamOperatorFactory operatorFactory;
     private int subTaskIndex;
     private String jobTaskName;
+    private ResultPartition[] resultPartitions;
 
 
     public Task(String jobTaskName, String invokableClassName, StreamOperatorFactory operatorFactory, ResultPartitionManager resultPartitionManager, InputGate[] inputGates, ResultPartition[] resultPartitions, int subTaskIndex) {
@@ -43,6 +46,7 @@ public class Task implements Runnable, Serializable {
         this.operatorFactory = operatorFactory;
         this.subTaskIndex = subTaskIndex;
         this.environment = new ExecutionEnvironment();
+        this.resultPartitions = resultPartitions;
         environment.setOperator(operatorFactory.createStreamOperator());
         environment.setResultPartitionManager(resultPartitionManager);
         environment.setResultPartitions(resultPartitions);
@@ -57,6 +61,9 @@ public class Task implements Runnable, Serializable {
 
     @SneakyThrows
     private void doRun() {
+        for (ResultPartition resultPartition : this.resultPartitions) {
+            resultPartition.register2PartitionManager();
+        }
         Class<? extends AbstractInvokable> invokableClazz = Class.forName(invokableClassName).asSubclass(AbstractInvokable.class);
         Constructor<? extends AbstractInvokable> constructor = invokableClazz.getConstructor(ExecutionEnvironment.class);
 

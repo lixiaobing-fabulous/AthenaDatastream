@@ -8,6 +8,7 @@ import com.athena.server.Server;
 
 import java.net.URLClassLoader;
 
+
 /**
  * @Description TODO
  * @Author lixiaobing
@@ -26,6 +27,7 @@ public class StandaloneWorker {
                     JavaSerializer javaSerializer = new JavaSerializer();
                     URLClassLoader urlClassLoader = new URLClassLoader(task.getJars(), StandaloneMaster.class.getClassLoader());
                     Runnable executable = (Runnable) javaSerializer.deserialize(task.getExecutable(), urlClassLoader);
+                    System.out.println("worker接收任务开始执行: " + executable);
                     new Thread(executable).start();
                 }
             });

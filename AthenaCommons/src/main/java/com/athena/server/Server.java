@@ -1,4 +1,4 @@
-package com.athena.api.util.server;
+package com.athena.server;
 
 import lombok.SneakyThrows;
 

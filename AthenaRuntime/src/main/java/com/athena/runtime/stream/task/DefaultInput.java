@@ -16,7 +16,7 @@ import java.util.concurrent.BlockingQueue;
  * @Date 2023/3/14
  * @Version 1.0
  **/
-public class DefaultInput<INPUT> implements Input{
+public class DefaultInput<INPUT> implements Input {
     private InputGate[] inputGates;
     private int curIdx = 0;
 
@@ -41,15 +41,16 @@ public class DefaultInput<INPUT> implements Input{
     }
 
     private static class InputChannelReader implements Runnable {
-        private ResultSubpartition subpartition;
         private BlockingQueue buffer;
+        private Long partitionId;
+        private int subTaskIndex;
+        private ResultPartitionManager resultPartitionManager;
 
         public InputChannelReader(InputChannel inputChannel, ResultPartitionManager resultPartitionManager, BlockingQueue buffer) {
-            Long partitionId = inputChannel.getPartitionId();
-            int subTaskIndex = inputChannel.getSubTaskIndex();
-            ResultPartition resultPartition = resultPartitionManager.getRegisteredPartitions().get(partitionId);
-            this.subpartition = resultPartition.getSubpartitions()[subTaskIndex];
+            partitionId = inputChannel.getPartitionId();
+            subTaskIndex = inputChannel.getSubTaskIndex();
             this.buffer = buffer;
+            this.resultPartitionManager = resultPartitionManager;
         }
 
 
@@ -57,7 +58,7 @@ public class DefaultInput<INPUT> implements Input{
         @SneakyThrows
         public void run() {
             while (true) {
-                buffer.put(subpartition.consume());
+                buffer.put(resultPartitionManager.consumeFromPartition(partitionId, subTaskIndex));
             }
         }
     }

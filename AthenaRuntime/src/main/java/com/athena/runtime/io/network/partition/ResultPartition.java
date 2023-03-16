@@ -29,7 +29,11 @@ public class ResultPartition<OUT> implements Serializable {
         }
         this.resultPartitionManager = resultPartitionManager;
         this.partitioner = partitioner;
+    }
+
+    public void register2PartitionManager() {
         resultPartitionManager.registerResultPartition(this);
+
     }
 
     public void write(StreamRecord<OUT> value) {

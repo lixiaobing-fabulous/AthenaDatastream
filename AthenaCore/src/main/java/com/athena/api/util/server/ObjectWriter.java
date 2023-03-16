@@ -1,5 +1,7 @@
 package com.athena.api.util.server;
 
+import lombok.SneakyThrows;
+
 import java.io.OutputStream;
 
 /**
@@ -20,4 +22,5 @@ public class ObjectWriter {
     public void write(Object object) {
         IOUtil.writeBytesToOutputStream(outputStream, javaSerializer.serialize(object));
     }
+
 }

@@ -107,12 +107,9 @@ public class StreamingEnvironment {
         }
 
         Map<Long, ExecutionJobVertex> tasks = executionGraph.getTasks();
-        int count = 0;
         for (ExecutionJobVertex executionJobVertex : tasks.values()) {
-            count += executionJobVertex.getTaskVertices().length;
             deployExecutionJob(executionJobVertex, resultPartitionManager);
         }
-        System.out.println(count);
     }
 
     @SneakyThrows
@@ -138,6 +135,7 @@ public class StreamingEnvironment {
                 ClassLoader classLoader = this.getClass().getClassLoader();
                 URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
                 URL[] urLs = urlClassLoader.getURLs();
+                System.out.println("远程部署任务" + taskVertex);
                 new Client("localhost", 6666).write(new ExecutableTask(javaSerializer.serialize(task), urLs));
             } else {
                 throw new UnsupportedOperationException(mode.name());

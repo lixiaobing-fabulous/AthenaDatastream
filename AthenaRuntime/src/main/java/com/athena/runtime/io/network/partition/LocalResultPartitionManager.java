@@ -16,8 +16,10 @@ public class LocalResultPartitionManager implements ResultPartitionManager {
         registeredPartitions.put(partition.getPartitionId(), partition);
     }
 
-    public Map<Long, ResultPartition> getRegisteredPartitions() {
-        return registeredPartitions;
+    @Override
+    public Object consumeFromPartition(Long partitionId, int subTaskIndex) {
+        return registeredPartitions.get(partitionId).getSubpartitions()[subTaskIndex].consume();
     }
+
 
 }

@@ -13,5 +13,6 @@
     <module>AthenaRuntime</module>
     <module>AthenaStandaloneCluster</module>
     <module>AthenaExample</module>
+      <module>AthenaCommons</module>
   </modules>
 </project>

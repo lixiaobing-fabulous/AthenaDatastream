@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public class WordCount {
     public static void main(String[] args) {
-        StreamingEnvironment env = StreamingEnvironment.getRuntimeEnvironment().setLocal();
+        StreamingEnvironment env = StreamingEnvironment.getRuntimeEnvironment().setRemote();
         env.setParallelism(1);
         env.fromElements("hello world", "hello world")
                 .flatMap(new Tokenizer())

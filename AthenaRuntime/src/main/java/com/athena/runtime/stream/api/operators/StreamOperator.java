@@ -1,5 +1,7 @@
 package com.athena.runtime.stream.api.operators;
 
+import com.athena.runtime.stream.streamrecord.StreamRecord;
+
 import java.io.Serializable;
 
 /**
@@ -12,5 +14,7 @@ public interface StreamOperator<OUT> extends Serializable {
     void open() throws Exception;
 
     void close() throws Exception;
+
+    void setKeyContextElement(StreamRecord<?> record) throws Exception;
 
 }
